@@ -1,5 +1,5 @@
 
-# function used to query a MSSQL or MySQL database
+# functions used to query a MSSQL or MySQL database
 
 function QueryTo-MSSQL {
     param([string]$query)
@@ -67,3 +67,24 @@ function Run-StoredProcedureMSSQL {
 
     $SqlConnection.Close()
 }
+
+# Bulk upload datatable to MSSQL db
+function Write-BulkDB {
+    param([datatable]$datatable)
+
+    $connectionString = "Data Source={server};Initial Catalog={database};Integrated Security=False;User ID={user};Password={password}"
+    $tableName = "{tableName}"
+    
+    $sqlBulkCopy = New-Object System.Data.SqlClient.SqlBulkCopy($connectionString,[System.Data.SqlClient.SqlBulkCopyOptions]::KeepIdentity)
+
+    #if columns in datatable have different names than the columns in the SQL table, it has to be changed here
+    $datatable.Columns | % { $sqlBulkCopy.ColumnMappings.Add($_.ColumnName,$_.ColumnName) }
+    $sqlBulkCopy.BulkCopyTimeout = 600
+    $sqlBulkCopy.DestinationTableName = $tableName
+    $sqlBulkCopy.WriteToServer($datatable)
+}
+
+
+
+
+
