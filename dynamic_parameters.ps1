@@ -23,8 +23,12 @@ Function Do-Something {
     Begin {}
 
     Process {
-        #
-        #
+        # dynamic parameters are saved in PSBoundParameters
+        # PSBoundParameters is a hash table containing all parameters
+
+        # to access it, take into account what type of variable was assigned, in this case string[] (ln 17)
+        $PSBoundParameters.customParam[0]
+
     }
 
     End {}
