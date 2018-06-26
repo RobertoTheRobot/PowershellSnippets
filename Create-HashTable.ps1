@@ -2,7 +2,7 @@
 #
 # Usage: $my_collection | Create-HashTable -key 'prop1' -value 'prop2'
 #
-Function Create-HashTable {
+Function Out-HashTable {
     param(
      [Parameter(Position=0, Mandatory=$true, ValueFromPipeline = $true)] [PSObject[]]$collection
     ,[Parameter(Position=1, Mandatory=$true, ValueFromPipeline = $false)][string]$key
