@@ -3,7 +3,7 @@
 
 # this is an example. It is not valid.
 $clientId = "-----------.apps.googleusercontent.com";
-$secret = "SW_UQTxPzIsvkdy2kr_ia2j2";
+$secret = "xXxXxXx";
 
 
 Function Get-AuthorizationCode {
