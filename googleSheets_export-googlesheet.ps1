@@ -1,14 +1,15 @@
 ﻿
 #########
 
-$clientId = "683604669969-ttitftek733q31nfbrovpl5vbkg8mko0.apps.googleusercontent.com";
+# this is an example. It is not valid.
+$clientId = "-----------.apps.googleusercontent.com";
 $secret = "SW_UQTxPzIsvkdy2kr_ia2j2";
 
 
 Function Get-AuthorizationCode {
 
     $scope = "https://www.googleapis.com/auth/spreadsheets"
-    $clientId = "683604669969-ttitftek733q31nfbrovpl5vbkg8mko0.apps.googleusercontent.com";
+    $clientId = "-----------.apps.googleusercontent.com";
     start "https://accounts.google.com/o/oauth2/auth?client_id=$clientId&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scope=$scope&response_type=code"
 
 }
@@ -122,7 +123,7 @@ function Export-GoogleSheet {
 # First time, it needs to create tha authorization code
 # Get-AuthorizationCode
 
-$AuthorizationCode = "4/AAAVIXDQCM0sWDXojriAHwFfbCgfpNS9-L9H_be5iRDnifJZ1GQMyh0"
+$AuthorizationCode = "xxxxxxxxxxxxxxxxxx"
 
 $token = Get-GoogleAccessToken -AuthorizationCode $AuthorizationCode -clientId $clientId -secret $secret
 $refresh = $token.refresh_token
