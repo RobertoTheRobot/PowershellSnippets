@@ -4,9 +4,9 @@
 #
 Function Out-HashTable {
     param(
-     [Parameter(Position=0, Mandatory=$true, ValueFromPipeline = $true)] [PSObject[]]$collection
-    ,[Parameter(Position=1, Mandatory=$true, ValueFromPipeline = $false)][string]$key
-    ,[Parameter(Position=2, Mandatory=$true, ValueFromPipeline = $false)][string]$value
+         [Parameter(Position=0, Mandatory=$true, ValueFromPipeline = $true)] [PSObject[]]$collection
+        ,[Parameter(Position=1, Mandatory=$true, ValueFromPipeline = $false)][string]$key
+        ,[Parameter(Position=2, Mandatory=$false, ValueFromPipeline = $false)][string]$value
     )
 
     Begin
@@ -15,17 +15,10 @@ Function Out-HashTable {
     }
     Process
     {
-        foreach($item in $collection)
-        {
-            if($hashTable[$item.($key)])
-            {
-                [void]$hashTable[$item.($key)].Add($item.($value))
-            }
-            else
-            {
-                $hashTable[$item.($key)] = New-Object System.Collections.ArrayList
-                [void]$hashTable[$item.($key)].Add($item.($value))
-            }
+        if($value) {
+            $hashTable[$item.($key)] = $item.($value)
+        } else {
+            $hashTable[$item.($key)] = $item
         }
     }
     End
@@ -56,7 +49,7 @@ Function TableTo-HashTable {
             # If the key has value in this item
             if($item.($key))
             {   
-                # If the key has not been created yet in the hashtable, create it with a empty array value  
+                # If the key has not been created yet in the hashtable, create it with a empty arraylist value  
                 if(!$hashTable[$item.($key)])  
                 {
                     $hashTable[$item.($key)] = New-Object System.Collections.ArrayList
