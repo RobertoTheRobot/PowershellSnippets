@@ -30,7 +30,7 @@ function QueryTo-MySQL {
     
     $ConnectionString = "server=" + $MySQLHost + ";port=3306;uid=" + $MySQLAdminUserName + ";pwd=" + $MySQLAdminPassword + ";database="+$MySQLDatabase
     
-    [void][ System.Reflection.Assembly]::LoadWithPartialName("MySql.Data")
+    [void][System.Reflection.Assembly]::LoadWithPartialName("MySql.Data")
     $Connection = New-Object MySql.Data.MySqlClient.MySqlConnection
     $Connection.ConnectionString = $ConnectionString
     $Connection.Open()

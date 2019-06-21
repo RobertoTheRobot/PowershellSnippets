@@ -1,8 +1,8 @@
 
 Function Encrypt-Message {
     param(
-     [Parameter(Position=0, Mandatory=$true, ValueFromPipeline = $true)] [string]$certificate_cn
-    ,[Parameter(Position=1, Mandatory=$true, ValueFromPipeline = $false)][string]$message
+     [Parameter(Position=0, Mandatory=$true, ValueFromPipeline = $false)] [string]$certificate_cn
+    ,[Parameter(Position=1, Mandatory=$true, ValueFromPipeline = $true)][string]$message
     )
 
     Begin
@@ -23,8 +23,8 @@ Function Encrypt-Message {
 
 Function Decrypt-Message {
     param(
-     [Parameter(Position=0, Mandatory=$true, ValueFromPipeline = $true)] [string]$certificate_cn
-    ,[Parameter(Position=1, Mandatory=$true, ValueFromPipeline = $false)][string]$message
+     [Parameter(Position=0, Mandatory=$true, ValueFromPipeline = $false)] [string]$certificate_cn
+    ,[Parameter(Position=1, Mandatory=$true, ValueFromPipeline = $true)][string]$message
     )
     Begin
     {

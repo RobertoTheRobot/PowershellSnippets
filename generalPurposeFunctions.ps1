@@ -1,6 +1,3 @@
-
-
-
 function Get-FileMetaData {  
     Param([string[]]$folder) 
     foreach($sFolder in $folder) 
@@ -36,7 +33,7 @@ function Get-ClipboardText(){
     ($tb.Text).Split("`n")
 }
 
-function Send-email {
+function Send-Email {
     param ([string] $sendTo, [string] $Subject ,[string] $body)
     $UserEmail = "noreply@myDomain.com"
     $smtpserver = "{smtpServerName}"
