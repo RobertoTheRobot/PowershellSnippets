@@ -9,7 +9,7 @@ function Test-Credentials {
     $CurrentDomain = "LDAP://" + ([ADSI]"").distinguishedName
     $domain = New-Object System.DirectoryServices.DirectoryEntry($CurrentDomain,$UserName,$Password)
     
-    if ($domain.name -eq $null)
+    if ($null -eq $domain.name)
     {
         write-host "Authentication failed."
     }
@@ -25,7 +25,7 @@ function Search-ByBitLockerKey {
     # Example: SearchByBitLockerKey 5E75ECD5
     
     $BitLockerObjects = Get-ADObject -Filter {objectclass -eq 'msFVE-RecoveryInformation'} -Properties 'msFVE-RecoveryPassword'
-    $object = $BitLockerObjects | ? { $_.DistinguishedName -like ("*" + $key + "*")}
+    $object = $BitLockerObjects | Where-Object { $_.DistinguishedName -like ("*" + $key + "*")}
 }
 
 function Get-LocalDC ($domain) {

@@ -16,7 +16,7 @@ function Get-ESContext {
 function Get-ESSearch {
     param([string]$index, [string]$body, [System.Object]$context)
     $q = $index + "/_search"
-    if($context.credential -eq $null) {
+    if($null -eq $context.credential) {
         $res = Invoke-RestMethod -Uri ([string]::Format("https://{0}:{1}/{2}",$context.host,$context.port,$q)) -Body $body -Method Post
     } else {
         $res = Invoke-RestMethod -Uri ([string]::Format("https://{0}:{1}/{2}",$context.host,$context.port,$q)) -Body $body -Method Post -Credential $context.credential
@@ -28,7 +28,7 @@ function Get-ESSearchScroll {
     param([string]$index, [string]$body, [string]$scrollTime, [System.Object]$context)
     #scrollTime ~ 1m / 5m ...
     $q = $index + "/_search?scroll=" + $scrollTime
-    if($context.credential -eq $null) {
+    if($null -eq $context.credential) {
         $res = Invoke-RestMethod -Uri ([string]::Format("https://{0}:{1}/{2}",$context.host,$context.port,$q)) -Body $body -Method Post -ContentType "application/json"
     } else {
         $res = Invoke-RestMethod -Uri ([string]::Format("https://{0}:{1}/{2}",$context.host,$context.port,$q)) -Body $body -Method Post -Credential $context.credential -ContentType "application/json"
@@ -42,7 +42,7 @@ function Get-ESSearchScroll_next {
     $q = $index + "_search/scroll"
 
     $query = '{"scroll_id" : "' + $pageToken + '", "scroll" : "' + $scrollTime + '" }'
-    if($context.credential -eq $null)
+    if($null -eq $context.credential)
     {
         $res = Invoke-RestMethod -Uri ([string]::Format("https://{0}:{1}/{2}",$context.host,$context.port,$q)) -Body $query -Method Post -ContentType "application/json"
     }

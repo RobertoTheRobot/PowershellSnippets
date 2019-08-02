@@ -78,7 +78,7 @@ function Write-BulkDB {
     $sqlBulkCopy = New-Object System.Data.SqlClient.SqlBulkCopy($connectionString,[System.Data.SqlClient.SqlBulkCopyOptions]::KeepIdentity)
 
     #if columns in datatable have different names than the columns in the SQL table, it has to be changed here
-    $datatable.Columns | % { $sqlBulkCopy.ColumnMappings.Add($_.ColumnName,$_.ColumnName) }
+    $datatable.Columns | ForEach-Object { $sqlBulkCopy.ColumnMappings.Add($_.ColumnName,$_.ColumnName) }
     $sqlBulkCopy.BulkCopyTimeout = 600
     $sqlBulkCopy.DestinationTableName = $tableName
     $sqlBulkCopy.WriteToServer($datatable)

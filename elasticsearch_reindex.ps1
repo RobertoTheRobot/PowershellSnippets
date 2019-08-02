@@ -48,7 +48,7 @@ $task = $tasks.nodes.($node).tasks.($taskId)
 
 $n = 10
 
-while($task -ne $null)
+while($null -ne $task)
 {
     Write-Progress ($task.action) -Status ($task.status.created.ToString() + " / " + $task.status.total.ToString()) -PercentComplete ($task.status.created *100 / $task.status.total)
     #Write-Host "Waiting for tasks to complete"

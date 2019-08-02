@@ -16,7 +16,7 @@ $runspacePool = [System.Management.Automation.Runspaces.RunspaceFactory]::Create
 $runspacePool.Open()
 $powershellThreads = @()
 
-$IdsToProcess | % {
+$IdsToProcess | ForEach-Object {
     Write-Progress -Activity "Adding Jobs" -Status $_.Id -PercentComplete (($UsersPending.IndexOf($_)/ $UsersPending.count)*100)
     $powershellInstance = [System.Management.Automation.Powershell]::Create()
     $command = {
@@ -80,7 +80,7 @@ $IdsToProcess | % {
 $seconds = 0
 Do {
         Write-Progress -Activity "Awaiting task completion passed seconds: $seconds" -Status ("Waiting to complete: " + ($powershellThreads.Result.IsCompleted -eq $false).Count)
-        Sleep -Seconds 1
+        Start-Sleep -Seconds 1
         $seconds = $seconds + 1
    }
 While ($powershellThreads.Result.IsCompleted -contains $false)
@@ -92,7 +92,7 @@ foreach ($powershellThread in $powershellThreads)
     $powershellThreadsCounter++
     Write-Progress -Activity "Resolving output" -Status ($powershellThreadsCounter) -PercentComplete (($powershellThreadsCounter/$powershellThreadsCount) * 100) -ParentId 1
     $result = $powershellThread.Pipe.EndInvoke($powershellThread.Result)
-    $result | %{[Void]$results.Add($_)}
+    $result | ForEach-Object {[Void]$results.Add($_)}
 }
 
 

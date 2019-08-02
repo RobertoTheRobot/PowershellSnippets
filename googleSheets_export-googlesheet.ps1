@@ -89,7 +89,7 @@ function Export-GoogleSheet {
 
     $updateSheetObj = New-Object psobject -Property @{"range"="";"majorDimension"="ROWS";"values"=(New-Object System.Collections.ArrayList)}
 
-    $columns = $data[0] | gm | ? {$_.MemberType -ne 'Method' }
+    $columns = $data[0] | Get-Member | Where-Object {$_.MemberType -ne 'Method' }
 
     $updateSheetObj.values.Add($columns.Name)
 
@@ -143,7 +143,7 @@ $data.Add((New-Object psobject -Property @{"brand"="Honda";"model"="VFR"}))
 
 $createdSpreadsheet = Export-GoogleSheet -data $data -name 'test_export_1' -accesstoken ($token.access_token)
 
-start ([string]::Format("https://docs.google.com/spreadsheets/d/{0}/edit",$createdSpreadsheet.spreadsheetId))
+Start-Process ([string]::Format("https://docs.google.com/spreadsheets/d/{0}/edit",$createdSpreadsheet.spreadsheetId))
 
 
 
