@@ -37,6 +37,6 @@
     }
     End
     {
-        Write-Progress -Activity "Processing..." -Status ($i.ToString() + "/" + $total.ToString()) -PercentComplete ($i*100/$total)
+        Write-Progress -Activity "Processing..." -Status ("{0} / {1}" -f $i,$total) -PercentComplete ($i*100/$total)
     }
 }
