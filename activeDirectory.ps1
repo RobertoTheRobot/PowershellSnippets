@@ -25,7 +25,7 @@ function Search-ByBitLockerKey {
     # Example: SearchByBitLockerKey 5E75ECD5
     
     $BitLockerObjects = Get-ADObject -Filter {objectclass -eq 'msFVE-RecoveryInformation'} -Properties 'msFVE-RecoveryPassword'
-    $object = $BitLockerObjects | Where-Object { $_.DistinguishedName -like ("*" + $key + "*")}
+    $BitLockerObjects | Where-Object { $_.DistinguishedName -like ("*" + $key + "*")}
 }
 
 function Get-LocalDC ($domain) {
