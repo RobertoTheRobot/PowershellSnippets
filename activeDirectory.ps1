@@ -41,7 +41,8 @@ function Get-LocalDC ($domain) {
         # Try 389
         $Connect = $Socks.BeginConnect(($Domain.FindDomainController()).name,389,$null,$null)
 	
-		$TTWait = $Connect.AsyncWaitHandle.WaitOne(250,$False) 
+        #$TTWait = 
+        $Connect.AsyncWaitHandle.WaitOne(250,$False) 
 		
         If ($Socks.Connected) 
         {		
@@ -51,7 +52,7 @@ function Get-LocalDC ($domain) {
 	}
 	else
     {
-    	$LocalDCs = ([System.DirectoryServices.ActiveDirectory.ActiveDirectorySite]::GetComputerSite()).Servers| ? { $_.Domain -match $domain }    	
+    	$LocalDCs = ([System.DirectoryServices.ActiveDirectory.ActiveDirectorySite]::GetComputerSite()).Servers| Where-Object { $_.Domain -match $domain }    	
     	
     	$potentials = @()    	
     	
@@ -59,7 +60,8 @@ function Get-LocalDC ($domain) {
         {    		
     		$Socks = New-Object System.Net.Sockets.TCPClient  
     		$Connect = $Socks.BeginConnect($LocalDC.Name,389,$null,$null)
-    		$TTWait = $Connect.AsyncWaitHandle.WaitOne(250,$False)     
+            #$TTWait = 
+            $Connect.AsyncWaitHandle.WaitOne(250,$False)     
     		
             If ($Socks.Connected) 
             {    		
