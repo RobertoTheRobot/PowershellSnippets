@@ -1,20 +1,20 @@
 ﻿class PredictedValue {
-    [double]$MinValue
-    [double]$MaxValue
+    [System.Decimal]$MinValue
+    [System.Decimal]$MaxValue
 }
 
 class Measurement {
     [int] $Index
-    [double]$RawValue
-    [double]$HistoricalHighValue
-    [double]$HistoricalLowValue
-    [double]$HistoricalAverageValue
-    [double]$HistoricalMedianValue
-    [double]$HistoricalStandardDeviationValue
-    [double]$Trend
+    [System.Decimal]$RawValue
+    [System.Decimal]$HistoricalHighValue
+    [System.Decimal]$HistoricalLowValue
+    [System.Decimal]$HistoricalAverageValue
+    [System.Decimal]$HistoricalMedianValue
+    [System.Decimal]$HistoricalStandardDeviationValue
+    [System.Decimal]$Trend
     [PredictedValue]$PredicetedNextValue
 
-    Measurement([int]$Index,[double]$RawValue,[double]$HistoricalHighValue,[double]$HistoricalLowValue,[double]$HistoricalAverageValue,[double]$HistoricalMedianValue,[double]$HistoricalStandardDeviationValue) {
+    Measurement([int]$Index,[System.Decimal]$RawValue,[System.Decimal]$HistoricalHighValue,[System.Decimal]$HistoricalLowValue,[System.Decimal]$HistoricalAverageValue,[System.Decimal]$HistoricalMedianValue,[System.Decimal]$HistoricalStandardDeviationValue) {
         $this.Index                 = $Index
         $this.RawValue              = $RawValue
         $this.HistoricalHighValue   = $HistoricalHighValue
@@ -263,13 +263,18 @@ Function Get-Average {
 # CONSTANTS
 
 # Value to calculate historical values
-$historicalConstant = 10
+$historicalConstant = 25
 
 # input: collection of values key = time, value = value
 $inputHash = @{}
 
 # populate example
 1..100 | ForEach-Object { $inputHash.Add($_,(Get-Average (Get-Process -Name Code).CPU)); sleep -Milliseconds 100 }
+
+$i=0
+Import-Csv .\Desktop\HistoricalQuotes.csv | % { $inputHash.Add($i, ([System.Decimal]::Parse($_.'Close/Last'.replace('$','')))); $i++ }
+
+
 
 # START
 
