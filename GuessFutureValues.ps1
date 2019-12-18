@@ -1,4 +1,9 @@
-﻿class Measurement {
+﻿class PredictedValue {
+    [double]$MinValue
+    [double]$MaxValue
+}
+
+class Measurement {
     [int] $Index
     [double]$RawValue
     [double]$HistoricalHighValue
@@ -6,6 +11,8 @@
     [double]$HistoricalAverageValue
     [double]$HistoricalMedianValue
     [double]$HistoricalStandardDeviationValue
+    [double]$Trend
+    [PredictedValue]$PredicetedNextValue
 
     Measurement([int]$Index,[double]$RawValue,[double]$HistoricalHighValue,[double]$HistoricalLowValue,[double]$HistoricalAverageValue,[double]$HistoricalMedianValue,[double]$HistoricalStandardDeviationValue) {
         $this.Index                 = $Index
@@ -16,10 +23,44 @@
         $this.HistoricalMedianValue  = $HistoricalMedianValue
         $this.HistoricalStandardDeviationValue = $HistoricalStandardDeviationValue
 
+        # These values are calculated in a second round of calculations, so they are not included in the constructor
+        $this.Trend = 0
+        $this.PredicetedNextValue = [PredictedValue]::new()
+
     }
 }
 
 #region Functions
+
+Function Extend-InputValues {
+    param([HashTable]$inputCalculated,$historicalConstant)
+
+
+    # This function will populate the trend and the predicted min and max value
+    foreach($key in $inputCalculated.Keys)
+    {
+        $minCollection = New-Object System.Collections.ArrayList
+        $maxCollection = New-Object System.Collections.ArrayList
+        #$avgCollection = New-Object System.Collections.ArrayList
+        #$medCollection = New-Object System.Collections.ArrayList
+        #$devCollection = New-Object System.Collections.ArrayList
+
+        $historicalConstant..0 | ForEach-Object {
+            $index = $key - $_
+            if($index -lt 0) { $index = 0 }
+
+            [void]$minCollection.Add($inputCalculated[$index].HistoricalLowValue)
+            [void]$maxCollection.Add($inputCalculated[$index].HistoricalHighValue)
+            #[void]$avgCollection.Add($inputCalculated[$index].HistoricalAverageValue)
+            #[void]$medCollection.Add($inputCalculated[$index].HistoricalMedianValue)
+            #[void]$devCollection.Add($inputCalculated[$index].HistoricalStandardDeviationValue)
+        }
+
+        $inputCalculated[$key].PredicetedNextValue.MinValue = Get-Average $minCollection
+        $inputCalculated[$key].PredicetedNextValue.MaxValue = Get-Average $maxCollection
+    }
+    return $inputCalculated
+}
 
 Function Get-InputCalculated {
     param($inputHash,$historicalConstant)
@@ -216,20 +257,36 @@ Function Get-Average {
 
 #endregion
 
+
+
+
 # CONSTANTS
 
 # Value to calculate historical values
 $historicalConstant = 10
 
-
-
-
 # input: collection of values key = time, value = value
 $inputHash = @{}
 
 # populate example
-1..100 | ForEach-Object { $inputHash.Add($_,(Get-WmiObject win32_processor | Measure-Object -property LoadPercentage -Average | Select Average).Average) }
+1..100 | ForEach-Object { $inputHash.Add($_,(Get-Average (Get-Process -Name Code).CPU)); sleep -Milliseconds 100 }
 
+# START
 
 $inputCalculated = Get-InputCalculated -inputHash $inputHash -historicalConstant $historicalConstant
 
+$inputExtended = Extend-InputValues  -inputCalculated $inputCalculated
+
+
+foreach($key in $inputExtended.Keys)
+{
+    if($inputExtended[$key+1].RawValue -ge $inputExtended[$key].PredicetedNextValue.MinValue -and
+       $inputExtended[$key+1].RawValue -le $inputExtended[$key].PredicetedNextValue.MaxValue)
+    {
+        Write-Host $inputExtended[$key].RawValue -ForegroundColor Green
+    } 
+    else 
+    {
+        Write-Host $inputExtended[$key].RawValue -ForegroundColor Red
+    }
+}
